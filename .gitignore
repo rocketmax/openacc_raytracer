@@ -1,3 +1,5 @@
 .DS_Store
 .trace
 raytracer/raytracer
+raytracer/raytracer_acc
+raytracer/*.o
