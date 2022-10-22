@@ -2,7 +2,6 @@
 .trace
 raytracer/raytracer
 raytracer/raytracer_acc
-raytracer/*.o
-.nfs*
-raytracer/.nfs*
+*.o
+*.nfs*
 raytracer/*.png

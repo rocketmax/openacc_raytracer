@@ -8,6 +8,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 
 #include "raytracer.h"
 #include "csfml_render.h"
@@ -33,6 +34,9 @@ void selectDemo(int argc, const char *argv[], Scene *scene) {
 }
 
 int main(int argc, const char *argv[]) {
+
+    clock_t before = clock();
+    
     Raytracer rt;
     raytracer_init(&rt, WINDOW_WIDTH, WINDOW_HEIGHT);
     selectDemo(argc, argv, &rt.scene);    
@@ -42,5 +46,10 @@ int main(int argc, const char *argv[]) {
     csfml_render(&rt);
 #endif
     raytracer_dealloc(&rt);
+    
+    clock_t difference = clock() - before;
+    float sec = (float) difference / CLOCKS_PER_SEC;
+    printf("Time taken: %f\r\n", sec);
+    
     return 0;    
 }
