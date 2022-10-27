@@ -13,6 +13,9 @@
 #include "ray.h"
 #include "utils.h"
 
+
+#include <time.h>
+
 #define MAX_RECURSION_DEPTH 4
 #define MAX_VISIBLE_DISTANCE 600.0
 
@@ -71,9 +74,9 @@ static Color ray_traceRecursive(const Ray *ray, const Scene *scene, size_t depth
     Material material = closestHit.surface->material;
     if (material.reflectivity > 0.0 && depth > 0) {
         Ray reflectedRay = ray_reflect(ray, closestHit.surface, collisionPoint);
-        if (material.reflectionNoise > 0) {
-            reflectedRay = ray_addNoise(&reflectedRay, material.reflectionNoise);
-        }
+        //if (material.reflectionNoise > 0) {
+        //    reflectedRay = ray_addNoise(&reflectedRay, material.reflectionNoise);
+        //}
         Color reflectionColor = ray_traceRecursive(&reflectedRay, scene, depth - 1);
         resultColor = color_blend(reflectionColor, material.reflectivity, resultColor);
     }
@@ -109,6 +112,9 @@ static ShadingResult ray_shadeAtPoint(const Ray *ray, const Scene *scene, const 
     Ray newRay;
     newRay.origin = point;
     TracingResult shadowTracingResult;
+    
+    //clock_t before = clock(); 
+        
     for (i = 0; i < scene->lights.count; i++) {
         light = ARRAY_GET(&scene->lights, i);
         lightDirection = light_getDirection(light, point);
@@ -123,6 +129,12 @@ static ShadingResult ray_shadeAtPoint(const Ray *ray, const Scene *scene, const 
                                                                  surface->material.specularity);
         }
     }
+    
+    
+    //clock_t difference = clock() - before;
+    //float sec = (float) difference / CLOCKS_PER_SEC;
+    //printf("Shade at point time taken: %f\r\n", sec);  
+    
     return shadingResult;
 }
 

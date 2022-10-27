@@ -20,5 +20,6 @@ typedef struct {
 
 Surface surface_initSphere(Vector3 position, double radius, Material material);
 Surface surface_initTriangle(Vector3 a, Vector3 b, Vector3 c, Material material);
+#pragma acc routine seq
 Vector3 surface_getNormalAtPoint(const Surface *surface, Vector3 point);
 #endif

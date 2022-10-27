@@ -79,6 +79,8 @@ void scene_loadSpheresDemo(Scene *scene) {
 }
 
 void scene_loadTeapotDemo(Scene *scene) {
+
+
     Material teapotMaterial = material_make(COLOR_WHITE, 0.2, 0, 20);
     scene_loadMesh(scene, "teapot.txt", teapotMaterial);
     
@@ -168,7 +170,7 @@ void scene_loadSnowmanDemo(Scene *scene) {
 
 void scene_loadMesh(Scene *scene, const char *filename, Material meshMaterial) {
     Array mesh = mesh_load(filename, meshMaterial);
-    array_addArray(&scene->surfaces, &mesh);    
+    array_addArray(&scene->surfaces, &mesh);  
 }
 
 void scene_AddLight(Scene *scene, Light *light) {

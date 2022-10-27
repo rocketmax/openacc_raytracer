@@ -125,8 +125,17 @@ void png_render(Raytracer *raytracer) {
     dateString = asctime(timeInfo);
     dateString[strlen(dateString) - 1] = '\0';
     sprintf(filename, "%s.png", dateString);
+
     raytracer_render(raytracer, draw, (void*)&renderedImage);
+    
+    clock_t before = clock();  
+        
     int status = png_saveToFile(& renderedImage, filename);
+    
+    clock_t difference = clock() - before;
+    float sec = (float) difference / CLOCKS_PER_SEC;
+    printf("PNG render time taken: %f\r\n", sec);      
+    
     if (status == 0) {
         printf("Output at: %s\n", filename);
     } else {

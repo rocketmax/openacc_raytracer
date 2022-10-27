@@ -31,6 +31,5 @@ Vector3 surface_getNormalAtPoint(const Surface *surface, Vector3 point) {
             return vec3_unit(vec3_sub(surface->geometry.sphere.center, point));
         default:
             return VEC3_ZERO;
-            break;
     }
 }

@@ -16,6 +16,8 @@
 
 #include <stdio.h>
 
+#include <time.h>
+
 #include "raytracer.h"
 #include "ray.h"
 
@@ -27,13 +29,48 @@ void raytracer_init(Raytracer *rt, size_t resolutionX, size_t resolutionY) {
 
 void raytracer_render(Raytracer *rt, DrawFunction draw, void *data) {
     camera_setup(&rt->scene.camera);
-    #pragma omp parallel for
-    for (int x = 0; x < rt->resolutionX; x++) {
-        for (int y = 0; y < rt->resolutionY; y++) {
-            Ray ray = ray_makeForPixel(&rt->scene.camera, x, y);
-            Color color = ray_trace(&ray, &rt->scene);
-            draw(data, color, x, y);
+    //#pragma acc parallel num_gangs(rt->resolutionX * rt->resolutionY / 8) \
+    //                     num_workers(8)
+    //{
+    //#pragma acc kernels
+    //for (int x = 0; x < rt->resolutionX; x++) {
+    //    for (int y = 0; y < rt->resolutionY; y++) {
+    //        Ray ray = ray_makeForPixel(&rt->scene.camera, x, y);
+    //        Color color = ray_trace(&ray, &rt->scene);
+    //        draw(data, color, x, y);
+    //    }
+    //}
+    //}
+    Ray ray[1920];
+    Color color[1920];    
+    
+    for (int y = 0; y < rt->resolutionY; y++) {
+    
+        //clock_t before = clock();
+        for (int x = 0; x < rt->resolutionX; x++) {
+
+            ray[x] = ray_makeForPixel(&rt->scene.camera, x, y);
         }
+        //clock_t difference = clock() - before;
+        //float sec = (float) difference / CLOCKS_PER_SEC;
+        //printf("Time taken: %f\r\n", sec);
+
+        //before = clock();   
+        #pragma acc kernels loop
+        for (int x = 0; x < rt->resolutionX; x++) {
+            color[x] = ray_trace(&ray[x], &rt->scene);
+        }
+        //difference = clock() - before;
+        //sec = (float) difference / CLOCKS_PER_SEC;
+        //printf("Time taken: %f\r\n", sec);
+        
+        //before = clock();
+        for (int x = 0; x < rt->resolutionX; x++) {
+            draw(data, color[x], x, y);
+        }
+        //difference = clock() - before;
+        //sec = (float) difference / CLOCKS_PER_SEC;
+        //printf("Time taken: %f\r\n", sec);
     }
 }
 

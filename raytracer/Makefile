@@ -16,4 +16,4 @@ with_csfml::
 clean:
 	rm -f *.o raytracer raytracer_acc
 acc:
-	$(CC)  -acc *.c -o raytracer_acc $(CFLAGS) -lpng -DPNG
+	$(CC)  -ta=tesla:managed -acc *.c -o raytracer_acc $(CFLAGS) -lpng -DPNG -Minfo=all

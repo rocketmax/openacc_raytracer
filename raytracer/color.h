@@ -33,12 +33,19 @@ typedef struct {
     double r, g, b;
 } Color;
 
+#pragma acc routine seq
 Color color_make(double r, double g, double b);
+#pragma acc routine seq
 Color color_makeFromRGB(unsigned char r, unsigned char g, unsigned char b);
+#pragma acc routine seq
 Color color_makeFromRGBhex(unsigned int c);
+#pragma acc routine seq
 Color color_add(Color a, Color b);
+#pragma acc routine seq
 Color color_addWeighted(Color a, double weightA, Color b, double weightB);
+#pragma acc routine seq
 Color color_mult(Color c, double n);
+#pragma acc routine seq
 Color color_blend(Color a, double weightA, Color b);
 
 #endif

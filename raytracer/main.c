@@ -39,7 +39,7 @@ int main(int argc, const char *argv[]) {
     
     Raytracer rt;
     raytracer_init(&rt, WINDOW_WIDTH, WINDOW_HEIGHT);
-    selectDemo(argc, argv, &rt.scene);    
+    selectDemo(argc, argv, &rt.scene);   
 #ifdef PNG
     png_render(&rt);
 #else

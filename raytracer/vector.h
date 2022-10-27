@@ -53,17 +53,29 @@ typedef struct {
     double x, y, z;
 } Vector3;
 
+#pragma acc routine seq
 Vector3 vec3_make(double x, double y, double z);
+#pragma acc routine seq
 Vector3 vec3_add(Vector3 a, Vector3 b);
+#pragma acc routine seq
 Vector3 vec3_add3(Vector3 a, Vector3 b, Vector3 c);
+#pragma acc routine seq
 double  vec3_dot(Vector3 a, Vector3 b);
+#pragma acc routine seq
 Vector3 vec3_sub(Vector3 a, Vector3 b);
+#pragma acc routine seq
 Vector3 vec3_multByVec3(Vector3 a, Vector3 b);
+#pragma acc routine seq
 Vector3 vec3_mult(Vector3 v, double b);
+#pragma acc routine seq
 Vector3 vec3_div(Vector3 v, double b);
+#pragma acc routine seq
 double  vec3_length(Vector3 v);
+#pragma acc routine seq
 Vector3 vec3_unit(Vector3 v);
+#pragma acc routine seq
 Vector3 vec3_cross(Vector3 a, Vector3 b);
+#pragma acc routine seq
 Vector3 vec3_negate(Vector3 v);
 
 #endif

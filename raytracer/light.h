@@ -17,9 +17,13 @@ typedef struct {
     double intensity;
 } Light;
 
+#pragma acc routine seq
 Light light_make(Vector3 position, double intensity);
+#pragma acc routine seq
 Vector3 light_getDirection(const Light *light, Vector3 point);
+#pragma acc routine seq
 double light_getDiffusedHighlight(const Light *light, Vector3 lightDirection, Vector3 normal);
+#pragma acc routine seq
 double light_getSpecularHighlight(const Light *light, Vector3 lightDirection,
                                   Vector3 normal, Vector3 rayDirection, double specularity);
 
