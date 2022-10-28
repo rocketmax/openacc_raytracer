@@ -41,8 +41,8 @@ void raytracer_render(Raytracer *rt, DrawFunction draw, void *data) {
     //    }
     //}
     //}
-    Ray ray[1920];
-    Color color[1920];    
+    Ray ray[720];
+    Color color[720];    
     
     for (int y = 0; y < rt->resolutionY; y++) {
     

@@ -22,6 +22,22 @@ static double invSqrt_1(double y) {
     return y;
 }
 
+double invSqrt( float number ){
+    union {
+        double f;
+        uint32_t i;
+    } conv;
+
+    double x2;
+    const double threehalfs = 1.5F;
+
+    x2 = number * 0.5F;
+    conv.f  = number;
+    conv.i  = 0x5fe6ec85e7de30daLL - ( conv.i >> 1 );
+    conv.f  = conv.f * ( threehalfs - ( x2 * conv.f * conv.f ) );
+    return conv.f;
+}
+
 //static double invSqrt_2(double number) {
 //    int64_t i;
 //    double x2, y;
@@ -76,7 +92,7 @@ double vec3_length(Vector3 v) {
 }
 
 Vector3 vec3_unit(Vector3 v) {
-    double is = invSqrt_1(SQUARE(v.x) + SQUARE(v.y) + SQUARE(v.z));
+    double is = 1.0/sqrt(SQUARE(v.x) + SQUARE(v.y) + SQUARE(v.z));
     return vec3_mult(v, is);
 }
 
