@@ -67,6 +67,7 @@ static Color ray_traceRecursive(const Ray *ray, const Scene *scene, size_t depth
     TracingResult closestHit = ray_traceOnce(ray, scene);
     Color resultColor;
     if (closestHit.surface == NULL) {
+        //printf("No hit\r\n");
         return scene->backgroundColor;
     }
     resultColor = closestHit.surface->material.color;
@@ -90,14 +91,19 @@ static TracingResult ray_traceOnce(const Ray *ray, const Scene *scene) {
     TracingResult closestHit = { .surface = NULL, .distance = 1.0 / 0.0 };
     double distance = 1.0 / 0.0f;
     int hit = 0;
+    //int debug = 0;
+
     for (size_t i = 0; i < scene->surfaces.count; i++) {
         Surface *surface = ARRAY_GET(&scene->surfaces, i);
         hit = ray_checkIntersection(ray, surface, &distance);
         if (hit && distance < closestHit.distance && distance > EPSILON) {
             closestHit.distance = distance;
             closestHit.surface = surface;
+            //debug = i;
         }
     }
+    //printf("TraceOnce closest distance: %f\r\n", closestHit.distance);
+    //printf("TraceOnce closest surface: %d\r\n", debug);
     return closestHit;
 }
 
@@ -225,6 +231,7 @@ static int ray_checkTriangleIntersection(const Ray *ray, const Triangle *t, doub
     Vector3 pvec, tvec, qvec;
     VEC3_CROSS(pvec, ray->direction, t->edges[0]);
     double det = VEC3_DOT(t->edges[1], pvec);
+    //printf("det: %f\r\n", det);
 #define EPSILON 0.000001
     if (det < EPSILON) {
         return 0;
@@ -232,11 +239,13 @@ static int ray_checkTriangleIntersection(const Ray *ray, const Triangle *t, doub
 #undef EPSILON
     VEC3_SUB(tvec, ray->origin, t->a);
     double u = VEC3_DOT(tvec, pvec);
+    //printf("u: %f\r\n", u);
     if (u < 0.0 || u > det) {
         return 0;
     }
     VEC3_CROSS(qvec, tvec, t->edges[1]);
     double v = VEC3_DOT(ray->direction, qvec);
+    //printf("v: %f\r\n", v);
     if (v < 0.0 || u + v > det) {
         return 0;
     }

@@ -44,6 +44,12 @@ void raytracer_render(Raytracer *rt, DrawFunction draw, void *data) {
     Ray ray[720];
     Color color[720];    
     
+    //printf("scene count: %d\r\n", rt->scene.surfaces.count);
+    //printf("scene capacity: %d\r\n", rt->scene.surfaces.capacity);
+    #pragma acc data copyin(rt[0:1])   \
+                     create(rt->scene)
+    {
+    
     for (int y = 0; y < rt->resolutionY; y++) {
     
         //clock_t before = clock();
@@ -56,21 +62,29 @@ void raytracer_render(Raytracer *rt, DrawFunction draw, void *data) {
         //printf("Time taken: %f\r\n", sec);
 
         //before = clock();   
+
         #pragma acc kernels loop
         for (int x = 0; x < rt->resolutionX; x++) {
+            //printf("scene count: %d\r\n", rt->scene.surfaces.count);
+            //printf("scene capacity: %d\r\n", rt->scene.surfaces.capacity);
+            //printf("x: %d, y: %d: (%f, %f, %f)\r\n", x, y, ray[x].direction.x, ray[x].direction.y, ray[x].direction.z);
             color[x] = ray_trace(&ray[x], &rt->scene);
         }
+        
         //difference = clock() - before;
         //sec = (float) difference / CLOCKS_PER_SEC;
         //printf("Time taken: %f\r\n", sec);
         
         //before = clock();
         for (int x = 0; x < rt->resolutionX; x++) {
+            //printf("x: %d, y: %d: (%f, %f, %f)\r\n", x, y, color[x].r, color[x].g, color[x].b);
             draw(data, color[x], x, y);
         }
         //difference = clock() - before;
         //sec = (float) difference / CLOCKS_PER_SEC;
         //printf("Time taken: %f\r\n", sec);
+        printf("%d/%d\r\n", y, rt->resolutionY);
+    }
     }
 }
 

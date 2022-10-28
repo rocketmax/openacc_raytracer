@@ -22,6 +22,10 @@ Array *array_init(Array *a, unsigned int itemSize, unsigned int initialCapacity)
     a->itemSize = itemSize;
     a->capacity = initialCapacity;
     a->count = 0;
+    
+    #pragma acc enter data copyin(a)
+    #pragma acc enter data create(a->items[0:a->itemSize*a->capacity], a->count, a->itemSize, a->capacity)
+  
     return a;
 }
 
@@ -40,6 +44,10 @@ int array_add(Array *a, void *item) {
     memOffset = (a->count * a->itemSize);
     memmove(a->items + memOffset, item, a->itemSize);
     a->count++;
+    
+    #pragma acc exit data delete(a->items, a->count, a->itemSize, a->capacity)
+    #pragma acc exit data delete(a)
+  
     return 1;
 }
 
