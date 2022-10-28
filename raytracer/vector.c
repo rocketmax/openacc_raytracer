@@ -22,10 +22,10 @@ static double invSqrt_1(double y) {
     return y;
 }
 
-double invSqrt( float number ){
+double invSqrt( double number ){
     union {
         double f;
-        uint32_t i;
+        uint64_t i;
     } conv;
 
     double x2;
@@ -92,7 +92,7 @@ double vec3_length(Vector3 v) {
 }
 
 Vector3 vec3_unit(Vector3 v) {
-    double is = 1.0/sqrt(SQUARE(v.x) + SQUARE(v.y) + SQUARE(v.z));
+    double is = invSqrt(SQUARE(v.x) + SQUARE(v.y) + SQUARE(v.z));
     return vec3_mult(v, is);
 }
 
