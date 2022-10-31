@@ -21,6 +21,9 @@
 #include "raytracer.h"
 #include "ray.h"
 
+#define Y_TILE_WIDTH 128
+#define X_TILE_WIDTH 128
+
 void raytracer_init(Raytracer *rt, size_t resolutionX, size_t resolutionY) {
     scene_init(&rt->scene, resolutionX, resolutionY);
     rt->resolutionX = resolutionX;
@@ -41,50 +44,59 @@ void raytracer_render(Raytracer *rt, DrawFunction draw, void *data) {
     //    }
     //}
     //}
-    Ray ray[720];
-    Color color[720];    
+    Ray ray[X_TILE_WIDTH][Y_TILE_WIDTH];
+    Color color[X_TILE_WIDTH][Y_TILE_WIDTH];    
     
-    //printf("scene count: %d\r\n", rt->scene.surfaces.count);
-    //printf("scene capacity: %d\r\n", rt->scene.surfaces.capacity);
-    #pragma acc data copyin(rt[0:1])   \
-                     create(rt->scene)
-    {
+    for (int tileY = 0; tileY < rt->resolutionY; tileY += Y_TILE_WIDTH) {
+        for(int tileX = 0; tileX < rt->resolutionX; tileX += X_TILE_WIDTH) {
+    //int tileY = 0; int tileX = 0;
     
-    for (int y = 0; y < rt->resolutionY; y++) {
-    
-        //clock_t before = clock();
-        for (int x = 0; x < rt->resolutionX; x++) {
-
-            ray[x] = ray_makeForPixel(&rt->scene.camera, x, y);
-        }
-        //clock_t difference = clock() - before;
-        //float sec = (float) difference / CLOCKS_PER_SEC;
-        //printf("Time taken: %f\r\n", sec);
-
-        //before = clock();   
-
-        #pragma acc kernels loop
-        for (int x = 0; x < rt->resolutionX; x++) {
-            //printf("scene count: %d\r\n", rt->scene.surfaces.count);
-            //printf("scene capacity: %d\r\n", rt->scene.surfaces.capacity);
-            //printf("x: %d, y: %d: (%f, %f, %f)\r\n", x, y, ray[x].direction.x, ray[x].direction.y, ray[x].direction.z);
-            color[x] = ray_trace(&ray[x], &rt->scene);
-        }
+            //printf("make %d, %d\r\n", tileX, tileY);
+            //clock_t before = clock();
+            for (int y = 0; y < Y_TILE_WIDTH; y++) {
+                for (int x = 0; x < X_TILE_WIDTH; x++) {
+                    if(tileX + x < rt->resolutionX && tileY + y < rt->resolutionY)
+                        ray[x][y] = ray_makeForPixel(&rt->scene.camera, tileX + x, tileY + y); 
+                }
+            }
+            //clock_t difference = clock() - before;
+            //float sec = (float) difference / CLOCKS_PER_SEC;
+            //printf("Time taken: %f\r\n", sec);
         
-        //difference = clock() - before;
-        //sec = (float) difference / CLOCKS_PER_SEC;
-        //printf("Time taken: %f\r\n", sec);
+            //before = clock();   
         
-        //before = clock();
-        for (int x = 0; x < rt->resolutionX; x++) {
-            //printf("x: %d, y: %d: (%f, %f, %f)\r\n", x, y, color[x].r, color[x].g, color[x].b);
-            draw(data, color[x], x, y);
+            //printf("trace %d, %d\r\n", tileX, tileY);
+            #pragma acc parallel vector_length(128) \
+                copyin(rt[0:1])   \
+                create(rt->scene) 
+            {
+                
+            #pragma acc loop independent 
+            for (int y = 0; y < Y_TILE_WIDTH; y++) {
+                #pragma acc loop independent
+                for (int x = 0; x < X_TILE_WIDTH; x++) {
+                    if(tileX + x < rt->resolutionX && tileY + y < rt->resolutionY){
+                        color[x][y] = ray_trace(&ray[x][y], &rt->scene); printf("x: %d, y: %d, tilex %d, tiley%d\r\n", x, y, tileX, tileY); }
+                }
+            }
+            }
+            //difference = clock() - before;
+            //sec = (float) difference / CLOCKS_PER_SEC;
+            //printf("Time taken: %f\r\n", sec);
+                
+            //before = clock();
+            //printf("draw %d, %d\r\n", tileX, tileY);
+            for (int y = 0; y < Y_TILE_WIDTH; y++) {
+                for (int x = 0; x < X_TILE_WIDTH; x++) {
+                    if(tileX + x < rt->resolutionX && tileY + y < rt->resolutionY)
+                        draw(data, color[x][y], tileX + x, tileY + y);
+                }
+            }
+            //difference = clock() - before;
+            //sec = (float) difference / CLOCKS_PER_SEC;
+            //printf("Time taken: %f\r\n", sec);
+            //printf("%d/%d\r\n", y, rt->resolutionY);
         }
-        //difference = clock() - before;
-        //sec = (float) difference / CLOCKS_PER_SEC;
-        //printf("Time taken: %f\r\n", sec);
-        printf("%d/%d\r\n", y, rt->resolutionY);
-    }
     }
 }
 

@@ -21,8 +21,8 @@ typedef struct {
 } Ray;
 
 Ray ray_make(Vector3 origin, Vector3 direction);
+#pragma acc routine seq
 Ray ray_makeForPixel(const Camera *c, size_t x, size_t y);
-
 #pragma acc routine seq
 Color ray_trace(const Ray *ray, const Scene *scene);
 

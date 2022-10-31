@@ -22,6 +22,7 @@ Array *array_init(Array *array, unsigned int itemSize, unsigned int initialCapac
 int array_add(Array *array, void *item); // 1 on success
 int array_addArray(Array *array, const Array *toAdd);
 void* array_getSafe(const Array *a, unsigned int index);
+#pragma acc routine seq
 void* array_get(const Array *array, unsigned int index);
 void array_remove(Array *array, unsigned int index);
 void array_dealloc(Array *array);

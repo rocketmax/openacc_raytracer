@@ -18,8 +18,8 @@ Light light_make(Vector3 position, double intensity) {
     return l;
 }
 
-Vector3 light_getDirection(const Light *light, Vector3 point) {
-    return vec3_unit(vec3_sub(point, light->position));
+Vector3 light_getDirection(Vector3 position, Vector3 point) {
+    return vec3_unit(vec3_sub(point, position));
 }
 
 double light_getDiffusedHighlight(const Light *light, Vector3 direction, Vector3 normal) {

@@ -16,8 +16,8 @@
 
 #include "utils.h"
 
-#define WINDOW_WIDTH 720
-#define WINDOW_HEIGHT 640
+#define WINDOW_WIDTH 256
+#define WINDOW_HEIGHT 256
 
 void selectDemo(int argc, const char *argv[], Scene *scene) {
     if (argc != 2) {
@@ -36,6 +36,9 @@ void selectDemo(int argc, const char *argv[], Scene *scene) {
 int main(int argc, const char *argv[]) {
 
     clock_t before = clock();
+    
+    //acc_init(0);
+    //acc_set_device_num(0, 0);
     
     Raytracer rt;
     raytracer_init(&rt, WINDOW_WIDTH, WINDOW_HEIGHT);

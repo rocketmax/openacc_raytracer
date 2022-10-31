@@ -123,9 +123,11 @@ static ShadingResult ray_shadeAtPoint(const Ray *ray, const Scene *scene, const 
         
     for (i = 0; i < scene->lights.count; i++) {
         light = ARRAY_GET(&scene->lights, i);
-        lightDirection = light_getDirection(light, point);
+        lightDirection = light_getDirection(light->position, point);
         newRay.direction = vec3_negate(lightDirection);
-        lightDistance = vec3_length(vec3_sub(light->position, point));
+        Vector3 temp;
+        VEC3_SUB(temp, light->position, point)
+        lightDistance = vec3_length(temp);
         shadowTracingResult = ray_traceOnce(&newRay, scene);
         if (shadowTracingResult.surface == NULL || shadowTracingResult.distance > lightDistance) {
             Vector3 normal = surface_getNormalAtPoint(surface, point);
