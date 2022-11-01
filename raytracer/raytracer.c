@@ -72,9 +72,9 @@ void raytracer_render(Raytracer *rt, DrawFunction draw, void *data) {
                           copyin(rt->scene)  \
                           copyin(rt->scene.lights[0:rt->scene.lights.capacity*rt->scene.lights.itemSize]) \
                           copyin(rt->scene.surfaces[0:rt->scene.surfaces.capacity*rt->scene.surfaces.itemSize]) \
-                          copyin(ray[0:X_TILE_WIDTH][0:X_TILE_WIDTH]) \
-                          create(color[0:X_TILE_WIDTH][0:X_TILE_WIDTH])  \
-                          copyout(color[0:X_TILE_WIDTH][0:X_TILE_WIDTH]) 
+                          copyin(ray[0:X_TILE_WIDTH][0:Y_TILE_WIDTH]) \
+                          create(color[0:X_TILE_WIDTH][0:Y_TILE_WIDTH])  \
+                          copyout(color[0:X_TILE_WIDTH][0:Y_TILE_WIDTH]) 
             {       
             #pragma acc loop independent 
             for (int y = 0; y < Y_TILE_WIDTH; y++) {
