@@ -21,7 +21,7 @@
 #include "raytracer.h"
 #include "ray.h"
 
-#define Y_TILE_WIDTH 128
+#define Y_TILE_WIDTH 128 
 #define X_TILE_WIDTH 128
 
 void raytracer_init(Raytracer *rt, size_t resolutionX, size_t resolutionY) {
@@ -47,11 +47,12 @@ void raytracer_render(Raytracer *rt, DrawFunction draw, void *data) {
     Ray ray[X_TILE_WIDTH][Y_TILE_WIDTH];
     Color color[X_TILE_WIDTH][Y_TILE_WIDTH];    
     
+
     for (int tileY = 0; tileY < rt->resolutionY; tileY += Y_TILE_WIDTH) {
         for(int tileX = 0; tileX < rt->resolutionX; tileX += X_TILE_WIDTH) {
     //int tileY = 0; int tileX = 0;
     
-            //printf("make %d, %d\r\n", tileX, tileY);
+            printf("make %d, %d\r\n", tileX, tileY);
             //clock_t before = clock();
             for (int y = 0; y < Y_TILE_WIDTH; y++) {
                 for (int x = 0; x < X_TILE_WIDTH; x++) {
@@ -67,19 +68,25 @@ void raytracer_render(Raytracer *rt, DrawFunction draw, void *data) {
         
             //printf("trace %d, %d\r\n", tileX, tileY);
             #pragma acc parallel vector_length(128) \
-                copyin(rt[0:1])   \
-                create(rt->scene) 
-            {
-                
+                          copyin(rt[0:1])   \
+                          copyin(rt->scene)  \
+                          copyin(rt->scene.lights[0:rt->scene.lights.capacity*rt->scene.lights.itemSize]) \
+                          copyin(rt->scene.surfaces[0:rt->scene.surfaces.capacity*rt->scene.surfaces.itemSize]) \
+                          copyin(ray[0:X_TILE_WIDTH][0:X_TILE_WIDTH]) \
+                          create(color[0:X_TILE_WIDTH][0:X_TILE_WIDTH])  \
+                          copyout(color[0:X_TILE_WIDTH][0:X_TILE_WIDTH]) 
+            {       
             #pragma acc loop independent 
             for (int y = 0; y < Y_TILE_WIDTH; y++) {
                 #pragma acc loop independent
                 for (int x = 0; x < X_TILE_WIDTH; x++) {
-                    if(tileX + x < rt->resolutionX && tileY + y < rt->resolutionY){
-                        color[x][y] = ray_trace(&ray[x][y], &rt->scene); printf("x: %d, y: %d, tilex %d, tiley%d\r\n", x, y, tileX, tileY); }
+                    if(tileX + x < rt->resolutionX && tileY + y < rt->resolutionY)//{
+                        color[x][y] = ray_trace(&ray[x][y], &rt->scene); //printf("x: %d, y: %d, tilex %d, tiley %d\r\n", x, y, tileX, tileY); }
                 }
             }
             }
+
+            
             //difference = clock() - before;
             //sec = (float) difference / CLOCKS_PER_SEC;
             //printf("Time taken: %f\r\n", sec);

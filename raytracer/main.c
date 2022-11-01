@@ -16,8 +16,8 @@
 
 #include "utils.h"
 
-#define WINDOW_WIDTH 256
-#define WINDOW_HEIGHT 256
+#define WINDOW_WIDTH 1920
+#define WINDOW_HEIGHT 1080
 
 void selectDemo(int argc, const char *argv[], Scene *scene) {
     if (argc != 2) {
