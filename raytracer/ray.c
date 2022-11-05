@@ -63,56 +63,13 @@ Color ray_trace(const Ray *ray, const Scene *scene) {
     return ray_traceRecursive(ray, scene, MAX_RECURSION_DEPTH);
 }
 
-/*static Color ray_traceRecursive(const Ray *ray, const Scene *scene, size_t depth) {
-    TracingResult closestHit = ray_traceOnce(ray, scene);
-    Color resultColor;
-    if (closestHit.surface == NULL) {
-        //printf("No hit\r\n");
-        return scene->backgroundColor;
-    }
-    resultColor = closestHit.surface->material.color;
-    Vector3 collisionPoint = vec3_add(vec3_mult(ray->direction, closestHit.distance), ray->origin);
-    Material material = closestHit.surface->material;
-    if (material.reflectivity > 0.0 && depth > 0) {
-        Ray reflectedRay = ray_reflect(ray, closestHit.surface, collisionPoint);
-        if (material.reflectionNoise > 0) {
-            reflectedRay = ray_addNoise(&reflectedRay, material.reflectionNoise);
-        }
-        Color reflectionColor = ray_traceRecursive(&reflectedRay, scene, depth - 1);
-        resultColor = color_blend(reflectionColor, material.reflectivity, resultColor);
-    }
-    ShadingResult shadingResult = ray_shadeAtPoint(ray, scene, closestHit.surface, collisionPoint);    
-    resultColor = getHighlightedColor(resultColor, shadingResult, scene->ambientCoefficient);
-    resultColor = color_mult(resultColor, (MAX_VISIBLE_DISTANCE - closestHit.distance) / MAX_VISIBLE_DISTANCE);
-    return resultColor;
-}*/
 
-
-/*static Color ray_traceRecursive(const Ray *ray, const Scene *scene, size_t depth) {
-    TracingResult closestHit = ray_traceOnce(ray, scene);
-    Color resultColor;
-    if (closestHit.surface == NULL) {
-        return scene->backgroundColor;
-    }
-    resultColor = closestHit.surface->material.color;
-    Vector3 collisionPoint = vec3_add(vec3_mult(ray->direction, closestHit.distance), ray->origin);
-    Material material = closestHit.surface->material;
-    if (material.reflectivity > 0.0 && depth > 0) {
-        Ray reflectedRay = ray_reflect(ray, closestHit.surface, collisionPoint);
-        Color reflectionColor;// = ray_traceRecursive(&reflectedRay, scene, depth - 1);
-        resultColor = color_blend(reflectionColor, material.reflectivity, resultColor);
-    }
-    ShadingResult shadingResult = ray_shadeAtPoint(ray, scene, closestHit.surface, collisionPoint);    
-    resultColor = getHighlightedColor(resultColor, shadingResult, scene->ambientCoefficient);
-    resultColor = color_mult(resultColor, (MAX_VISIBLE_DISTANCE - closestHit.distance) / MAX_VISIBLE_DISTANCE);
-    return resultColor;
-}*/
 
 static Color ray_traceRecursive(const Ray *ray, const Scene *scene, size_t depth) {
     TracingResult closestHit = ray_traceOnce(ray, scene);
     Color resultColor;
     if (closestHit.surface == NULL) {
-        //printf("No hit\r\n");
+        
         return scene->backgroundColor;
     }
     resultColor = closestHit.surface->material.color;
@@ -120,7 +77,7 @@ static Color ray_traceRecursive(const Ray *ray, const Scene *scene, size_t depth
     Material material = closestHit.surface->material;
     if (material.reflectivity > 0.0 && depth > 0) {
         Ray reflectedRay = ray_reflect(ray, closestHit.surface, collisionPoint);
-        Color reflectionColor;//ray_traceRecursive(&reflectedRay, scene, depth - 1);
+        Color reflectionColor;
         //R1
         TracingResult closestHit1 = ray_traceOnce(&reflectedRay, scene);
         Color resultColor1;
@@ -134,7 +91,7 @@ static Color ray_traceRecursive(const Ray *ray, const Scene *scene, size_t depth
           Material material1 = closestHit1.surface->material;
           if (material1.reflectivity > 0.0 && depth-1 > 0) {
               Ray reflectedRay1 = ray_reflect(&reflectedRay, closestHit1.surface, collisionPoint1);
-              Color reflectionColor1;// = ray_traceRecursive(&&reflectedRay, scene, depth - 1);
+              Color reflectionColor1;
               //R2
               TracingResult closestHit2 = ray_traceOnce(&reflectedRay1, scene);
               Color resultColor2;
@@ -148,7 +105,7 @@ static Color ray_traceRecursive(const Ray *ray, const Scene *scene, size_t depth
                 Material material2 = closestHit2.surface->material;
                 if (material2.reflectivity > 0.0 && depth-2 > 0) {
                     Ray reflectedRay2 = ray_reflect(&reflectedRay1, closestHit2.surface, collisionPoint2);
-                    Color reflectionColor2;// = ray_traceRecursive(&&reflectedRay, scene, depth - 1);
+                    Color reflectionColor2;
                     //R3
                     TracingResult closestHit3 = ray_traceOnce(&reflectedRay2, scene);
                     Color resultColor3;
@@ -162,7 +119,7 @@ static Color ray_traceRecursive(const Ray *ray, const Scene *scene, size_t depth
                       Material material3 = closestHit3.surface->material;
                       if (material3.reflectivity > 0.0 && depth-3 > 0) {
                           Ray reflectedRay3 = ray_reflect(&reflectedRay2, closestHit3.surface, collisionPoint3);
-                          Color reflectionColor3;// = ray_traceRecursive(&&reflectedRay, scene, depth - 1);
+                          Color reflectionColor3;
                           //R4
                           TracingResult closestHit4 = ray_traceOnce(&reflectedRay3, scene);
                           Color resultColor4;
@@ -217,7 +174,7 @@ static TracingResult ray_traceOnce(const Ray *ray, const Scene *scene) {
     TracingResult closestHit = { .surface = NULL, .distance = 1.0 / 0.0 };
     double distance = 1.0 / 0.0f;
     int hit = 0;
-    //int debug = 0;
+    
 
     for (size_t i = 0; i < scene->surfaces.count; i++) {
         Surface *surface = ARRAY_GET(&scene->surfaces, i);
@@ -225,11 +182,9 @@ static TracingResult ray_traceOnce(const Ray *ray, const Scene *scene) {
         if (hit && distance < closestHit.distance && distance > EPSILON) {
             closestHit.distance = distance;
             closestHit.surface = surface;
-            //debug = i;
         }
     }
-    //printf("TraceOnce closest distance: %f\r\n", closestHit.distance);
-    //printf("TraceOnce closest surface: %d\r\n", debug);
+    
     return closestHit;
 }
 
@@ -245,7 +200,7 @@ static ShadingResult ray_shadeAtPoint(const Ray *ray, const Scene *scene, const 
     newRay.origin = point;
     TracingResult shadowTracingResult;
     
-    //clock_t before = clock(); 
+    
         
     for (i = 0; i < scene->lights.count; i++) {
         light = ARRAY_GET(&scene->lights, i);
@@ -255,7 +210,7 @@ static ShadingResult ray_shadeAtPoint(const Ray *ray, const Scene *scene, const 
         shadowTracingResult = ray_traceOnce(&newRay, scene);
         if (shadowTracingResult.surface == NULL || shadowTracingResult.distance > lightDistance) {
             Vector3 normal = surface_getNormalAtPoint(surface, point);
-            //Vector3 normal = surface->geometry.triangle.normal; //surface_getNormalAtPoint(surface, point);
+            
             shadingResult.diffused += light_getDiffusedHighlight(light, lightDirection, normal);
             shadingResult.specular += light_getSpecularHighlight(light, lightDirection,
                                                                  normal, ray->direction,
@@ -264,9 +219,7 @@ static ShadingResult ray_shadeAtPoint(const Ray *ray, const Scene *scene, const 
     }
     
     
-    //clock_t difference = clock() - before;
-    //float sec = (float) difference / CLOCKS_PER_SEC;
-    //printf("Shade at point time taken: %f\r\n", sec);  
+    
     
     return shadingResult;
 }
@@ -305,24 +258,7 @@ static int ray_checkIntersection(const Ray *ray, const Surface *surface, double 
 }
 
 // http://www.cs.unc.edu/~rademach/xroads-RT/RTarticle.html
-//static TracingResult ray_checkSphereIntersection_1(const Ray *ray, const Sphere *s) {
-//    TracingResult result;
-//    result.hit = 0;
-//    Vector3 EO = vec3_sub(s->center, ray->origin);
-//    double v = vec3_dot(EO, ray->direction);
-//    if (v < 0) {
-//        return result;
-//    }
-//    double r = s->radius;
-//    double disc = SQUARE(r) - (vec3_dot(EO, EO) - SQUARE(v));
-//    if (disc < 0.0) {
-//        return result;
-//    }
-//    double d = sqrt(disc);
-//    result.distance = MIN(v - d, v + d);
-//    result.hit = 1;
-//    return result;
-//}
+
 
 // http://stackoverflow.com/questions/14074643/why-does-raytracer-render-spheres-as-ovals
 static int ray_checkSphereIntersection(const Ray *ray, const Sphere *sphere, double *distance) {
@@ -358,7 +294,7 @@ static int ray_checkTriangleIntersection(const Ray *ray, const Triangle *t, doub
     Vector3 pvec, tvec, qvec;
     VEC3_CROSS(pvec, ray->direction, t->edges[0]);
     double det = VEC3_DOT(t->edges[1], pvec);
-    //printf("det: %f\r\n", det);
+    
 #define EPSILON 0.000001
     if (det < EPSILON) {
         return 0;
@@ -366,21 +302,17 @@ static int ray_checkTriangleIntersection(const Ray *ray, const Triangle *t, doub
 #undef EPSILON
     VEC3_SUB(tvec, ray->origin, t->a);
     double u = VEC3_DOT(tvec, pvec);
-    //printf("u: %f\r\n", u);
     if (u < 0.0 || u > det) {
         return 0;
     }
     VEC3_CROSS(qvec, tvec, t->edges[1]);
     double v = VEC3_DOT(ray->direction, qvec);
-    //printf("v: %f\r\n", v);
     if (v < 0.0 || u + v > det) {
         return 0;
     }
     double d = VEC3_DOT(t->edges[0], qvec);
     double inv_det = 1.0 / det;
     d *= inv_det;
-//    u *= inv_det; // may be useful in the future to get texture coordinates
-//    v *= inv_det;
     *distance = d;
     return 1;
 }
