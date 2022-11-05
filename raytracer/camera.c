@@ -29,5 +29,4 @@ void camera_setup(Camera *c) {
     c->planeCenter = c_0;
     c->planeDirectionX = u_x;
     c->planeDirectionY = u_y;
-    //    Vector3 u_z = vec3_mult(u_c, -1.0); // Normal to the view plane
 }
