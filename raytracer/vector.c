@@ -38,20 +38,6 @@ double invSqrt( double number ){
     return conv.f;
 }
 
-//static double invSqrt_2(double number) {
-//    int64_t i;
-//    double x2, y;
-//    const double threehalfs = 1.5F;
-//    
-//    x2 = number * 0.5F;
-//    y = number;
-//    i = * ( int64_t * ) &y;
-//    i = 0x5fe6ec85e7de30da - ( i >> 1 );
-//    y = * ( double * ) &i;
-//    y = y * ( threehalfs - ( x2 * y * y ) ); // 1st iteration
-//    y = y * ( threehalfs - ( x2 * y * y ) ); // 2nd iteration, this can be removed
-//    return y;
-//}
 
 Vector3 vec3_make(double x, double y, double z) {
     Vector3 v;
