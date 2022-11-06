@@ -45,11 +45,9 @@ void raytracer_render(Raytracer *rt, DrawFunction draw, void *data) {
                         ray[x][y] = ray_makeForPixel(&rt->scene.camera, tileX + x, tileY + y); 
                 }
             }
-            #pragma acc parallel vector_length(128) \
+            #pragma acc kernels vector_length(16) \
                           copyin(rt[0:1])   \
                           copyin(rt->scene)  \
-                          copyin(rt->scene.lights[0:rt->scene.lights.capacity*rt->scene.lights.itemSize]) \
-                          copyin(rt->scene.surfaces[0:rt->scene.surfaces.capacity*rt->scene.surfaces.itemSize]) \
                           copyin(ray[0:X_TILE_WIDTH][0:Y_TILE_WIDTH]) \
                           create(color[0:X_TILE_WIDTH][0:Y_TILE_WIDTH])  \
                           copyout(color[0:X_TILE_WIDTH][0:Y_TILE_WIDTH]) 
