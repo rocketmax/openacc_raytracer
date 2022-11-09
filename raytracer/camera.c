@@ -1,8 +1,11 @@
 //
-//  camera.c
-//  raytracer
+//  File name: camera.c
 //
-//  Created by Krzysztof Gabis on 01.04.2013.
+//  Authors: Created by Krzysztof Gabis on 01.04.2013 
+//           Modified by CSI 5640 Team (Max Theisen, Sumati Gupta, Prajakta Jadhav, Priya Kharde, Oluwakemi Ibrahim) on 11.09.2022
+//
+//  File contains: Intialization of camera parameters with (0,0,0) position, (0,0,1) direction and 430 focal length
+//
 //  Copyright (c) 2013 Krzysztof Gabis. All rights reserved.
 //
 
