@@ -1,11 +1,16 @@
 //
-//  light.c
-//  raytracer
+//  File name: light.c
 //
-//  Created by Krzysztof Gabis on 01.04.2013.
+//  Authors: Created by Krzysztof Gabis on 01.04.2013 
+//           Modified by CSI 5640 Team (Max Theisen, Sumati Gupta, Prajakta Jadhav, Priya Kharde, Oluwakemi Ibrahim) on 11.09.2022
+//
+//  File contains: Functions using concepts of light dispersion to simulate light in scene. This includes direction, position, 
+//                 intensity, highlights, shadows, etc. These concepts can be referred to here:
+//                 http://en.wikipedia.org/wiki/Phong_reflection_model  
+//
 //  Copyright (c) 2013 Krzysztof Gabis. All rights reserved.
 //
-// http://en.wikipedia.org/wiki/Phong_reflection_model
+
 
 #include <math.h>
 #include "light.h"
