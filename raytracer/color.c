@@ -1,8 +1,11 @@
 //
-//  color.c
-//  raytracer
+//  File name: color.c
 //
-//  Created by Krzysztof Gabis on 28.03.2013.
+//  Authors: Created by Krzysztof Gabis on 01.04.2013 
+//           Modified by CSI 5640 Team (Max Theisen, Sumati Gupta, Prajakta Jadhav, Priya Kharde, Oluwakemi Ibrahim) on 11.09.2022
+//
+//  File contains: Functions to intialize, modify, and blend colors for pixels in the output image. Color follows RGB standard. 
+//
 //  Copyright (c) 2013 Krzysztof Gabis. All rights reserved.
 //
 
