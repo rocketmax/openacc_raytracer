@@ -1,9 +1,14 @@
 //
-//  array.c
+//  File name: array.c
 //  raytracer
 //
-//  Created by Krzysztof Gabis on 01.04.2013.
-//  Copyright (c) 2013 Krzysztof Gabis. All rights reserved.
+//  Authors: Created by Krzysztof Gabis on 01.04.2013 
+//           Modified by CSI 5640 Team (Max Theisen, Sumati Gupta, Prajakta Jadhav, Priya Kharde, Oluwakemi Ibrahim) on 11.09.2022
+//  
+// File contains: Since C programing doesn't have in-built support for Dynamic Arrays, this file contains functions to allow this
+//                using pointers. These functions allocates memory, adds elements, retrevive elemets, deletes elements, modifies  
+//                them, etc. 
+// Copyright (c) 2013 Krzysztof Gabis. All rights reserved.
 //
 
 #include <stdlib.h>
