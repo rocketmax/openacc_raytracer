@@ -1,6 +1,5 @@
 //
 //  File name: array.c
-//  raytracer
 //
 //  Authors: Created by Krzysztof Gabis on 01.04.2013 
 //           Modified by CSI 5640 Team (Max Theisen, Sumati Gupta, Prajakta Jadhav, Priya Kharde, Oluwakemi Ibrahim) on 11.09.2022
