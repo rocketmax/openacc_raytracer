@@ -1,8 +1,11 @@
 //
-//  surface.c
-//  raytracer
+//  File name: surface.c
 //
-//  Created by Krzysztof Gabis on 30.03.2013.
+//  Authors: Created by Krzysztof Gabis on 30.03.2013.
+//           Modified by CSI 5640 Team (Max Theisen, Sumati Gupta, Prajakta Jadhav, Priya Kharde, Oluwakemi Ibrahim) on 11.09.2022
+//
+//  File contains: Helps with initializing sphere and triangle objects, as well as getting the normal vector for points on the surface.
+//
 //  Copyright (c) 2013 Krzysztof Gabis. All rights reserved.
 //
 

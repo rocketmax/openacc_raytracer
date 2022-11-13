@@ -1,8 +1,11 @@
 //
-//  mesh.c
-//  raytracer
+//  File name: mesh.c
 //
-//  Created by Krzysztof Gabis on 08.04.2013.
+//  Authors: Created by Krzysztof Gabis on 08.04.2013.
+//           Modified by CSI 5640 Team (Max Theisen, Sumati Gupta, Prajakta Jadhav, Priya Kharde, Oluwakemi Ibrahim) on 11.09.2022
+//
+//  File contains: A method to load an input file of points into an array of triangles to be used as a 3D mesh object
+//
 //  Copyright (c) 2013 Krzysztof Gabis. All rights reserved.
 //
 

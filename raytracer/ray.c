@@ -1,8 +1,11 @@
 //
-//  ray.c
-//  raytracer
+//  File name: ray.c
 //
-//  Created by Krzysztof Gabis on 01.04.2013.
+//  Authors: Created by Krzysztof Gabis on 01.04.2013.
+//           Modified by CSI 5640 Team (Max Theisen, Sumati Gupta, Prajakta Jadhav, Priya Kharde, Oluwakemi Ibrahim) on 11.09.2022
+//
+//  File contains: Contains the key functions that perform the tracing of the ray and calculate the result color accordingly.
+//
 //  Copyright (c) 2013 Krzysztof Gabis. All rights reserved.
 //
 

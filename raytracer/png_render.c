@@ -1,10 +1,14 @@
 //
-//  png_main.c
-//  raytracer
+//  File name: png_render.c
 //
-//  Created by Krzysztof Gabis on 13.04.2013.
+//  Authors: Created by Krzysztof Gabis on 13.04.2013.
+//           Modified by CSI 5640 Team (Max Theisen, Sumati Gupta, Prajakta Jadhav, Priya Kharde, Oluwakemi Ibrahim) on 11.09.2022
+//
+//  File contains: An interface to the png C library that will accept an RGB color for each pixel, then create and save a png image.
+//
 //  Copyright (c) 2013 Krzysztof Gabis. All rights reserved.
 //
+
 #ifdef PNG
 
 #include <png.h>

@@ -1,8 +1,11 @@
 //
-//  scene.c
-//  raytracer
+//  File name: scene.c
 //
-//  Created by Krzysztof Gabis on 01.04.2013.
+//  Authors: Created by Krzysztof Gabis on 01.04.2013.
+//           Modified by CSI 5640 Team (Max Theisen, Sumati Gupta, Prajakta Jadhav, Priya Kharde, Oluwakemi Ibrahim) on 11.09.2022
+//
+//  File contains: Initialization of the 3D scene based on the demo argument provided when the program was started.
+//
 //  Copyright (c) 2013 Krzysztof Gabis. All rights reserved.
 //
 

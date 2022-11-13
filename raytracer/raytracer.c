@@ -1,8 +1,11 @@
 //
-//  raytracer.c
-//  raytracer
+//  File name: raytracer.c
 //
-//  Created by Krzysztof Gabis on 29.03.2013.
+//  Authors: Created by Krzysztof Gabis on 29.03.2013.
+//           Modified by CSI 5640 Team (Max Theisen, Sumati Gupta, Prajakta Jadhav, Priya Kharde, Oluwakemi Ibrahim) on 11.09.2022
+//
+//  File contains: The nested loop that iterates over each pixel of the output image. For each, a ray is created and traced, then the result color is set in the output image.
+//
 //  Copyright (c) 2013 Krzysztof Gabis. All rights reserved.
 //
 // 17.08.2013 15:10 - O3 

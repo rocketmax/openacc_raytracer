@@ -1,8 +1,11 @@
 //
-//  ray.h
-//  raytracer
+//  File name: ray.h
 //
-//  Created by Krzysztof Gabis on 01.04.2013.
+//  Authors: Created by Krzysztof Gabis on 01.04.2013.
+//           Modified by CSI 5640 Team (Max Theisen, Sumati Gupta, Prajakta Jadhav, Priya Kharde, Oluwakemi Ibrahim) on 11.09.2022
+//
+//  File contains: Defines the Ray object, composed of an origin and a direction
+//
 //  Copyright (c) 2013 Krzysztof Gabis. All rights reserved.
 //
 

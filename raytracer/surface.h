@@ -1,8 +1,11 @@
 //
-//  surfaces.h
-//  raytracer
+//  File name: surface.h
 //
-//  Created by Krzysztof Gabis on 25.03.2013.
+//  Authors: Created by Krzysztof Gabis on 30.03.2013.
+//           Modified by CSI 5640 Team (Max Theisen, Sumati Gupta, Prajakta Jadhav, Priya Kharde, Oluwakemi Ibrahim) on 11.09.2022
+//
+//  File contains: Defines the surface object with a type and material.
+//
 //  Copyright (c) 2013 Krzysztof Gabis. All rights reserved.
 //
 
