@@ -49,7 +49,7 @@ There are three different scenes available, spheres, snowman, and teapot. Teapot
 	* 3D vector implementation and helper functions
 
 ## Credit
-Credit to the bulk of the goes goes to kgabis and can be found here: [https://github.com/kgabis/raytracer](https://github.com/kgabis/raytracer)
+Credit for the bulk of the C code before parallelization goes to Krzysztof Gabis and can be found here: [https://github.com/kgabis/raytracer](https://github.com/kgabis/raytracer)
 
 ## License
 [The MIT License (MIT)](http://opensource.org/licenses/mit-license.php)
