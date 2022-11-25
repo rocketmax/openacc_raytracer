@@ -22,6 +22,7 @@
 
 #include "utils.h"
 
+// Output image resolution
 #define WINDOW_WIDTH 1920
 #define WINDOW_HEIGHT 1080
 
@@ -29,7 +30,7 @@ void selectDemo(int argc, const char *argv[], Scene *scene) {
     if (argc != 2) {
         printf("Usage: %s DEMO_NAME\n", argv[0]);
         printf("Available demos: spheres, snowman, teapot\n");
-        scene_loadSpheresDemo(scene);
+        scene_loadTeapotDemo(scene);
     } else if (STREQ(argv[1], "spheres")) {
         scene_loadSpheresDemo(scene);
     } else if (STREQ(argv[1], "snowman")) {

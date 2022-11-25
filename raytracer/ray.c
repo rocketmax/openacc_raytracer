@@ -66,8 +66,32 @@ Color ray_trace(const Ray *ray, const Scene *scene) {
     return ray_traceRecursive(ray, scene, MAX_RECURSION_DEPTH);
 }
 
+// Original ray_traceRecursive function that was not OpenACC safe
 
+// static Color ray_traceRecursive(const Ray *ray, const Scene *scene, size_t depth) {
+//     TracingResult closestHit = ray_traceOnce(ray, scene);
+//     Color resultColor;
+//     if (closestHit.surface == NULL) {
+//         return scene->backgroundColor;
+//     }
+//     resultColor = closestHit.surface->material.color;
+//     Vector3 collisionPoint = vec3_add(vec3_mult(ray->direction, closestHit.distance), ray->origin);
+//     Material material = closestHit.surface->material;
+//     if (material.reflectivity > 0.0 && depth > 0) {
+//         Ray reflectedRay = ray_reflect(ray, closestHit.surface, collisionPoint);
+//         if (material.reflectionNoise > 0) {
+//             reflectedRay = ray_addNoise(&reflectedRay, material.reflectionNoise);                // This function was removed from inlined function
+//         }
+//         Color reflectionColor = ray_traceRecursive(&reflectedRay, scene, depth - 1);
+//         resultColor = color_blend(reflectionColor, material.reflectivity, resultColor);
+//     }
+//     ShadingResult shadingResult = ray_shadeAtPoint(ray, scene, closestHit.surface, collisionPoint);    
+//     resultColor = getHighlightedColor(resultColor, shadingResult, scene->ambientCoefficient);
+//     resultColor = color_mult(resultColor, (MAX_VISIBLE_DISTANCE - closestHit.distance) / MAX_VISIBLE_DISTANCE);
+//     return resultColor;
+// }
 
+// Inlined version of the recursive function that is OpenACC safe
 static Color ray_traceRecursive(const Ray *ray, const Scene *scene, size_t depth) {
     TracingResult closestHit = ray_traceOnce(ray, scene);
     Color resultColor;
@@ -81,7 +105,7 @@ static Color ray_traceRecursive(const Ray *ray, const Scene *scene, size_t depth
     if (material.reflectivity > 0.0 && depth > 0) {
         Ray reflectedRay = ray_reflect(ray, closestHit.surface, collisionPoint);
         Color reflectionColor;
-        //R1
+        // Recurse level 1
         TracingResult closestHit1 = ray_traceOnce(&reflectedRay, scene);
         Color resultColor1;
         if (closestHit1.surface == NULL) {
@@ -95,7 +119,7 @@ static Color ray_traceRecursive(const Ray *ray, const Scene *scene, size_t depth
           if (material1.reflectivity > 0.0 && depth-1 > 0) {
               Ray reflectedRay1 = ray_reflect(&reflectedRay, closestHit1.surface, collisionPoint1);
               Color reflectionColor1;
-              //R2
+              // Recurse level 2
               TracingResult closestHit2 = ray_traceOnce(&reflectedRay1, scene);
               Color resultColor2;
               if (closestHit2.surface == NULL) {
@@ -109,7 +133,7 @@ static Color ray_traceRecursive(const Ray *ray, const Scene *scene, size_t depth
                 if (material2.reflectivity > 0.0 && depth-2 > 0) {
                     Ray reflectedRay2 = ray_reflect(&reflectedRay1, closestHit2.surface, collisionPoint2);
                     Color reflectionColor2;
-                    //R3
+                    // Recurse level 3
                     TracingResult closestHit3 = ray_traceOnce(&reflectedRay2, scene);
                     Color resultColor3;
                     if (closestHit3.surface == NULL) {
@@ -123,7 +147,7 @@ static Color ray_traceRecursive(const Ray *ray, const Scene *scene, size_t depth
                       if (material3.reflectivity > 0.0 && depth-3 > 0) {
                           Ray reflectedRay3 = ray_reflect(&reflectedRay2, closestHit3.surface, collisionPoint3);
                           Color reflectionColor3;
-                          //R4
+                          // Recurse level 4
                           TracingResult closestHit4 = ray_traceOnce(&reflectedRay3, scene);
                           Color resultColor4;
                           if (closestHit4.surface == NULL) {
@@ -140,7 +164,7 @@ static Color ray_traceRecursive(const Ray *ray, const Scene *scene, size_t depth
                             resultColor4 = color_mult(resultColor4, (MAX_VISIBLE_DISTANCE - closestHit4.distance) / MAX_VISIBLE_DISTANCE);
                             reflectionColor3 = resultColor4;
                           }                          
-                          //R4
+                          // End of recurse level 4
                           resultColor3 = color_blend(reflectionColor3, material3.reflectivity, resultColor3);
                       }
                       ShadingResult shadingResult3 = ray_shadeAtPoint(&reflectedRay2, scene, closestHit3.surface, collisionPoint3);    
@@ -148,7 +172,7 @@ static Color ray_traceRecursive(const Ray *ray, const Scene *scene, size_t depth
                       resultColor3 = color_mult(resultColor3, (MAX_VISIBLE_DISTANCE - closestHit3.distance) / MAX_VISIBLE_DISTANCE);
                       reflectionColor2 = resultColor3;
                     }
-                    //R3
+                    // End of recurse level 3
                     resultColor2 = color_blend(reflectionColor2, material1.reflectivity, resultColor2);
                 }
                 ShadingResult shadingResult2 = ray_shadeAtPoint(&reflectedRay1, scene, closestHit2.surface, collisionPoint2);    
@@ -156,7 +180,7 @@ static Color ray_traceRecursive(const Ray *ray, const Scene *scene, size_t depth
                 resultColor2 = color_mult(resultColor2, (MAX_VISIBLE_DISTANCE - closestHit2.distance) / MAX_VISIBLE_DISTANCE);
                 reflectionColor1 = resultColor2;
               }                                    
-              //R2
+              // End of recurse level 2
               resultColor1 = color_blend(reflectionColor1, material1.reflectivity, resultColor1);
           }
           ShadingResult shadingResult1 = ray_shadeAtPoint(&reflectedRay, scene, closestHit1.surface, collisionPoint1);    
@@ -164,7 +188,7 @@ static Color ray_traceRecursive(const Ray *ray, const Scene *scene, size_t depth
           resultColor1 = color_mult(resultColor1, (MAX_VISIBLE_DISTANCE - closestHit1.distance) / MAX_VISIBLE_DISTANCE);
           reflectionColor = resultColor1;
         }
-        //R1
+        // End of recurse level 1
         resultColor = color_blend(reflectionColor, material.reflectivity, resultColor);
     }
     ShadingResult shadingResult = ray_shadeAtPoint(ray, scene, closestHit.surface, collisionPoint);    
@@ -227,6 +251,8 @@ static ShadingResult ray_shadeAtPoint(const Ray *ray, const Scene *scene, const 
     return shadingResult;
 }
 
+// Removed as rand is incompatible with OpenACC. To fix this, the cuda rand function 
+//   would have to be used, which would make it incompatible without OpenACC.
 static Ray ray_addNoise(const Ray *ray, double epsilon) {
     double r = (((double)rand()/RAND_MAX) * 2 * epsilon) - epsilon;
     Ray newRay = *ray;

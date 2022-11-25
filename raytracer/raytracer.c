@@ -38,16 +38,19 @@ void raytracer_render(Raytracer *rt, DrawFunction draw, void *data) {
     Ray ray[X_TILE_WIDTH][Y_TILE_WIDTH];
     Color color[X_TILE_WIDTH][Y_TILE_WIDTH];    
     
-
+    // Iterate over tiles
     for (int tileY = 0; tileY < rt->resolutionY; tileY += Y_TILE_WIDTH) {
         for(int tileX = 0; tileX < rt->resolutionX; tileX += X_TILE_WIDTH) {
     
+            // Create ray
             for (int y = 0; y < Y_TILE_WIDTH; y++) {
                 for (int x = 0; x < X_TILE_WIDTH; x++) {
                     if(tileX + x < rt->resolutionX && tileY + y < rt->resolutionY)
                         ray[x][y] = ray_makeForPixel(&rt->scene.camera, tileX + x, tileY + y); 
                 }
             }
+
+            // Parallel trace rays with initialization of acc 
             #pragma acc kernels vector_length(16) \
                           copyin(rt[0:1])   \
                           copyin(rt->scene)  \
@@ -65,6 +68,7 @@ void raytracer_render(Raytracer *rt, DrawFunction draw, void *data) {
             }
             }
 
+            // Draw output image
             for (int y = 0; y < Y_TILE_WIDTH; y++) {
                 for (int x = 0; x < X_TILE_WIDTH; x++) {
                     if(tileX + x < rt->resolutionX && tileY + y < rt->resolutionY)
